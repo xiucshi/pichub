@@ -29,10 +29,10 @@ logging:
     com.cong.controller: info
 html:
   host: 10.21.71.111
-  homepage: http://10.21.71.111:8080/homepage.html
-  index: http://10.21.71.111:8080/index.html
+#  homepage: http://10.21.71.111:8080/homepage.html
+#  index: http://10.21.71.111:8080/index.html
 server:
-  port: 8080
+  port: 80
 
 
 
