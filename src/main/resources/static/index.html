@@ -7,22 +7,24 @@
 	<title>登录页</title>
 	<link type="text/css" rel="stylesheet" href="css/login_style.css" />
 	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	<script src="js/vue.js"></script>
+	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
 </head>
 <body>
-	<form action="/login" method="post" class="login-form">
+	<form  method="post" class="login-form" id="login">
 		<h1><span>登录</span></h1>
 		
 		<div class="txtb">
-			<input name="username" type="text" >
+			<input name="username" type="text" v-model="username"/>
 			<span data-placeholder = "用户名"></span>
 		</div>
 		
 		<div class="txtb">
-			<input name="password" type="password" >
+			<input name="password" type="password" v-model="password"/>
 			<span data-placeholder = "密码"></span>
 		</div>
 		
-		<input type="submit" class="submit-btn" value="登录"/>
+		<input type="button" class="submit-btn" value="登录" @click="login()"/>
 		
 		<div class="bottom-txt">
 			<span class="txt-span">没有账号?</span><a href="#" style="text-decoration: none;"><span class="txt-span">注册<span></a>
@@ -36,6 +38,31 @@
 		$(".txtb input").on("blur",function(){
 			if($(this).val() == "")
 				$(this).removeClass("focus");
+		});
+	</script>
+	<script>
+		new Vue({
+			el: '#login',
+			data:{
+				username:'',
+				password:''
+			},
+			methods:{
+				login(){
+					let formData = new FormData();
+					formData.append('username',this.username);
+					formData.append('password',this.password);
+					this.$http.post(
+							'/login',
+							formData
+					).then(function (response) {
+						window.location.href = '/homepage.html';
+						// this.$http.get('/homepage.html');
+					},function (response) {
+						alert("登录失败");
+					})
+				}
+			}
 		});
 	</script>
 </body>
