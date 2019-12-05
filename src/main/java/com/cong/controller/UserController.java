@@ -37,10 +37,10 @@ public class UserController {
     @Autowired
     private Map<String,String> map;
 
-    @Value("${html.homepage}")
-    private String HOMEPAGE;
-    @Value("${html.index}")
-    private String INDEX;
+//    @Value("${html.homepage}")
+//    private String HOMEPAGE;
+//    @Value("${html.index}")
+//    private String INDEX;
     @PostMapping("/login")
     public ResponseEntity<String> login(HttpServletRequest request, HttpServletResponse response,
                                         @RequestParam("username") String username, @RequestParam("password") String password) throws IOException {
@@ -55,30 +55,35 @@ public class UserController {
             mailContainer.add("IP地址：" + request.getRemoteAddr());
             mailContainer.add("设备：" + client);
             threadPool.execute(sender);
-            response.sendRedirect(HOMEPAGE);
+            return ResponseEntity.ok().body("登录成功");
         }
-        return ResponseEntity.ok().body(loginInfo.get());
+        return ResponseEntity.status(401).body("登录失败");
     }
-    @GetMapping("/loginout")
-    public void loginout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @GetMapping("/logout")
+    public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.getSession().removeAttribute("username");
         String client = request.getHeader("User-Agent").split("\\)")[0] + ")";
         map.remove(client);
-        response.sendRedirect(INDEX);
+        return ResponseEntity.ok().body("退出登录成功");
     }
 
 
-
-    @GetMapping("/")
-    public void welcome(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-        String client = request.getHeader("User-Agent").split("\\)")[0] + ")";
-        if (session.getAttribute("username") == null && map.get(client) == null){
-            response.sendRedirect(INDEX);
-        } else {
-            response.sendRedirect(HOMEPAGE);
-        }
-    }
+    /**
+     * 充当路由
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+//    @GetMapping("/")
+//    public void welcome(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        HttpSession session = request.getSession();
+//        String client = request.getHeader("User-Agent").split("\\)")[0] + ")";
+//        if (session.getAttribute("username") == null && map.get(client) == null){
+//            response.sendRedirect(INDEX);
+//        } else {
+//            response.sendRedirect(HOMEPAGE);
+//        }
+//    }
     @GetMapping("/username")
     public ResponseEntity<Object> getLoginedUsername(HttpServletRequest request){
         HttpSession session = request.getSession();
