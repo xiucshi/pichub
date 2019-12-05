@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<title>首页</title>
+	<script src="js/vue.js"></script>
+	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/homepage_style.css" />
+	<link rel="stylesheet" type="text/css" href="iconfont/iconfont.css">
+</head>
+<body>
+	<div class="container" id="app">
+		<div>
+			<div class="user-div">
+				<span class="iconfont user-icon-span" v-on:mouseover.once="getLoginedUsername()">&#xe6db;</span>
+				<div class="user-info-div">
+					<span class="iconfont user-info">&#xe6db; username: {{username[0]}}</span>
+					<form class="loginout-form" :action="host + '/loginout'" method="get">
+						<input type="submit" class="loginout-btn" value = "登出"/>
+					</form>
+				</div>
+			</div>
+			<h1>Pichub</h1>
+		</div>
+		<div class="left-div">
+			<form >
+				<input type="button" id="up" class="btn upload-btn iconfont" value="上传文件 &#xe69b;" @click="show_upload_page = !show_upload_page"/>
+			</form>
+
+			<form  class="upload-form" v-show="show_upload_page" method="post"  enctype="multipart/form-data">
+				<div >
+					<input class="select-file" type="file" name="files" @change="bindFiles($event)" multiple/>
+				</div>
+				<div>
+					<input class="category-txt" type="text" name="category" v-model="upload_category"  placeholder="请输入类别" />
+				</div>
+				<div>
+					<input class="submit-btn" type="button" value="上传" v-on:click.prevent="upload()"/>
+				</div>
+			</form>
+
+			<input type="button" class="btn view-all-btn" value="显示全部" @click="getCategory"/>
+			<hr style="margin: 5px;color: #2980B9;">
+			<div class="category-div">
+				<h2>category</h2>
+				<div class="link-div">
+					<ul>
+						<li v-for="c in category_list">
+							<span class="iconfont">&#xe608;</span>
+							<a @click="getFilenamesByCategory(c)">{{c}}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="right-div">
+			<div id="files" >
+				<a class="link" v-for="f in filenames" v-if="!f.endsWith('.mp4')" @click="loadPicture(f)">
+					<img :src="host + '/picture?filename=' + f" height="80px"/>
+				</a>
+				<a class="link" v-for="f in filenames" v-if="f.endsWith('.mp4')" @click="loadVideo(f)" :title="f">
+					<span class="iconfont video-span" >&#xeb97;</span>
+				</a>
+
+			</div>
+
+		</div>
+		<div class="view-div">
+			<video v-show="play" id="player" width="480px" controls="controls" preload="auto">
+				<source  type="video/mp4"/>
+			</video>
+			<img v-show="raw_image_url!==''" :src="raw_image_url" width="720px"/>
+		</div>
+	</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data:{
+            category: '',
+            filenames: [],
+            category_list:[],
+			play:false,
+			host: 'http://10.21.71.111:8080',
+			raw_image_url:'',
+			show_upload_page:false,
+			username:'',
+			upload_files:[],
+			upload_category:''
+		},
+		methods:{
+			getLoginedUsername(){
+				this.$http.get(this.host + '/username').then(function (res){
+				    this.username = res.data;
+				})
+			},
+			loadPicture(name){
+				this.raw_image_url = this.host + '/picture/' + name;
+			},
+            stopVideo(){
+                this.play = false;
+                let player = document.getElementById("player");
+                player.pause();
+			},
+            loadVideo(name){
+				this.raw_image_url="";
+                this.play = true;
+                let player = document.getElementById("player");
+                player.volume = 0.05;
+                player.src = this.host + '/videos/' + name;
+                player.play();
+			},
+			bindFiles(event){
+				let files = event.target.files;
+				console.log(files)
+				for(let i = 0; i < files.length;i++){
+					this.upload_files.push(files[i]);
+				}
+			},
+            upload(){
+				let formData = new FormData();
+				for (let i = 0;i < this.upload_files.length;i++){
+					formData.append('files',this.upload_files[i]);
+				}
+				formData.append('category',this.upload_category);
+
+				this.$http.post(this.host + '/file',
+						formData,
+						{
+							headers: {
+								'Content-Type': 'multipart/form-data'
+							}
+						}).then(function (){
+							alert("文件上传成功");
+						} , function () {
+							alert("文件上传失败");
+						})
+				this.show_upload_page = false;
+            },
+            getCategory(){
+                this.$http.get(this.host + '/category').then(function (res){
+                    this.category_list = res.data;
+                    this.stopVideo();
+                })
+            },
+            getFilenamesByCategory(category){
+                this.$http.get(this.host + '/filenames', {params:{category: category}}).then(function (res){
+                    this.filenames = res.data;
+                    this.stopVideo();
+                })
+            }
+        }
+    });
+</script>
+</body>
+</html>

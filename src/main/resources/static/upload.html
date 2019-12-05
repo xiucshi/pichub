@@ -1,0 +1,65 @@
+<!--<!doctype html>-->
+<!--<html>-->
+    <!--<head>-->
+        <!--<meta charset="UTF-8"/>-->
+        <!--<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;">-->
+        <!--<meta name="apple-mobile-web-app-capable" content="yes">-->
+        <!--<meta name="apple-mobile-web-app-status-bar-style" content="black">-->
+        <!--<meta name="format-detection" content="telephone=no">-->
+        <!--<title>图片上传</title>-->
+    <!--</head>-->
+    <!--<body>-->
+        <!--<form method="post" action="http://pichub.zicp.vip/file" enctype="multipart/form-data">-->
+            <!--<input type="file" name="file" multiple>-->
+			<!--类别/人名: <input type="text" name = "category" />-->
+            <!--<input type="submit" value="Upload">-->
+        <!--</form>-->
+    <!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="en" class="no-js" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>login</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="css/demo.css" />
+    <!--必要样式-->
+    <link rel="stylesheet" type="text/css" href="css/component.css" />
+    <link rel="icon" href="img/User_login_128px_500811_easyicon.net.ico" type="image/x-icon"/>
+    <!--[if IE]>
+    <script src="js/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="container demo-1">
+    <div class="content">
+        <div id="large-header" class="large-header">
+            <canvas id="demo-canvas"></canvas>
+            <div class="logo_box">
+                <h3>Pichub</h3>
+                <form action="/file" name="f" method="post" enctype="multipart/form-data">
+                    <div class="input_outer">
+                        <span class="u_user"></span>
+                        <input name="file" class="text" style="color: #FFFFFF !important" type="file" multiple>
+                    </div>
+                    <div class="input_outer">
+                        <span class="us_uer"></span>
+                        <input name="category" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;" value="" type="text" placeholder="请输入类别">
+                    </div>
+                    <div class="mb2">
+                        <span class="submit_form"></span>
+                        <input class="act-but submit" type="submit" style="color: #FFFFFF !important;" value="上传"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div><!-- /container -->
+<script src="js/TweenLite.min.js"></script>
+<script src="js/EasePack.min.js"></script>
+<script src="js/rAF.js"></script>
+<script src="js/demo-1.js"></script>
+</body>
+</html>

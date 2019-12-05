@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/beauty?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 400MB
+  mail:
+    host: smtp.qq.com
+    username: 1292480579@qq.com
+    password: fllriospuhubhgbf
+
+mail:
+  from: ${spring.mail.username}
+  to: xiuc_shi@163.com
+
+
+
+pichub:
+  url: http://pichub.zicp.vip/
+logging:
+  file:
+    path: E:/pichub/logs/
+    max-history: 100
+  level:
+    com.cong.controller: info
+html:
+  host: 10.21.71.111
+  homepage: http://10.21.71.111:8080/homepage.html
+  index: http://10.21.71.111:8080/index.html
+server:
+  port: 8080
+
+
+
