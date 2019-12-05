@@ -19,8 +19,8 @@
 				<span class="iconfont user-icon-span" v-on:mouseover.once="getLoginedUsername()">&#xe6db;</span>
 				<div class="user-info-div">
 					<span class="iconfont user-info">&#xe6db; username: {{username[0]}}</span>
-					<form class="loginout-form" :action="host + '/loginout'" method="get">
-						<input type="submit" class="loginout-btn" value = "登出"/>
+					<form class="loginout-form"  method="get">
+						<input type="button" class="loginout-btn" value = "登出" @click="logout"/>
 					</form>
 				</div>
 			</div>
@@ -32,7 +32,7 @@
 			</form>
 
 			<form  class="upload-form" v-show="show_upload_page" method="post"  enctype="multipart/form-data">
-				<div >
+				<div>
 					<input class="select-file" type="file" name="files" @change="bindFiles($event)" multiple/>
 				</div>
 				<div>
@@ -94,7 +94,7 @@
 		},
 		methods:{
 			getLoginedUsername(){
-				this.$http.get(this.host + '/username').then(function (res){
+				this.$http.get('/username').then(function (res){
 				    this.username = res.data;
 				})
 			},
@@ -120,15 +120,22 @@
 				for(let i = 0; i < files.length;i++){
 					this.upload_files.push(files[i]);
 				}
+				let list = [];
+				for(let file in files){
+					list.push(file);
+				}
+				console.log(list);
 			},
             upload(){
 				let formData = new FormData();
+				console.log(this.upload_files);
 				for (let i = 0;i < this.upload_files.length;i++){
 					formData.append('files',this.upload_files[i]);
 				}
 				formData.append('category',this.upload_category);
 
-				this.$http.post(this.host + '/file',
+				this.$http.post(
+						'/file',
 						formData,
 						{
 							headers: {
@@ -142,17 +149,24 @@
 				this.show_upload_page = false;
             },
             getCategory(){
-                this.$http.get(this.host + '/category').then(function (res){
+                this.$http.get('/category').then(function (res){
                     this.category_list = res.data;
                     this.stopVideo();
                 })
             },
             getFilenamesByCategory(category){
-                this.$http.get(this.host + '/filenames', {params:{category: category}}).then(function (res){
+                this.$http.get('/filenames', {params:{category: category}}).then(function (res){
                     this.filenames = res.data;
                     this.stopVideo();
                 })
-            }
+            },
+			logout(){
+				this.$http.get(
+						'/logout'
+				).then(function (response) {
+					window.location.href='/index.html';
+				})
+			}
         }
     });
 </script>
