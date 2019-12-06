@@ -6,7 +6,6 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>登录页</title>
 	<link type="text/css" rel="stylesheet" href="css/login_style.css" />
-	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 	<script src="js/vue.js"></script>
 	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
 </head>
@@ -15,12 +14,12 @@
 		<h1><span>登录</span></h1>
 		
 		<div class="txtb">
-			<input name="username" type="text" v-model="username"/>
+			<input :class="[usernameFlag ? 'focus' : '']" name="username" type="text" v-model="username" @focus="focusEvent($event)" @blur="blurEvent($event)" />
 			<span data-placeholder = "用户名"></span>
 		</div>
-		
+
 		<div class="txtb">
-			<input name="password" type="password" v-model="password"/>
+			<input :class="[passwordFlag ? 'focus' : '']" name="password" type="password" v-model="password" @focus="focusEvent($event)"  @blur="blurEvent($event)"/>
 			<span data-placeholder = "密码"></span>
 		</div>
 		
@@ -32,20 +31,21 @@
 	</form>
 
 	<script type="text/javascript">
-		$(".txtb input").on("focus",function(){
-			$(this).addClass("focus");
-		});
-		$(".txtb input").on("blur",function(){
-			if($(this).val() == "")
-				$(this).removeClass("focus");
-		});
-	</script>
-	<script>
+		// $(".txtb input").on("focus",function(){
+		// 	$(this).addClass("focus");
+		// });
+		// $(".txtb input").on("blur",function(){
+		// 	if($(this).val() == "")
+		// 		$(this).removeClass("focus");
+		// });
+
 		new Vue({
 			el: '#login',
 			data:{
 				username:'',
-				password:''
+				password:'',
+				usernameFlag: false,
+				passwordFlag: false
 			},
 			methods:{
 				login(){
@@ -61,6 +61,22 @@
 					},function (response) {
 						alert("登录失败");
 					})
+				},
+				focusEvent(event){
+					if (event.target.name == "username"){
+						this.usernameFlag = true;
+					}
+					if (event.target.name == "password"){
+						this.passwordFlag = true;
+					}
+				},
+				blurEvent(event){
+					if(event.target.name == "username" && event.target.value == ""){
+						this.usernameFlag = false;
+					}
+					if(event.target.name == "password" && event.target.value == ""){
+						this.passwordFlag = false;
+					}
 				}
 			}
 		});
