@@ -41,7 +41,7 @@ public class UserController {
 //    @Value("${html.index}")
 //    private String INDEX;
     @PostMapping("/login")
-    public ResponseEntity<String> login(HttpServletRequest request, HttpServletResponse response,
+    public ResponseEntity<Object> login(HttpServletRequest request, HttpServletResponse response,
                                         @RequestParam("username") String username, @RequestParam("password") String password) throws IOException {
         Optional<String> loginInfo = authService.login(username, password);
         if(loginInfo.get().equals("登录成功")){
@@ -54,16 +54,16 @@ public class UserController {
             mailContainer.add("IP地址：" + request.getRemoteAddr());
             mailContainer.add("设备：" + client);
             threadPool.execute(sender);
-            return ResponseEntity.ok().body("登录成功");
+            return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList("登录成功")));
         }
-        return ResponseEntity.status(401).body("登录失败");
+        return ResponseEntity.status(401).body(new ArrayList<>(Arrays.asList("登录失败")));
     }
     @GetMapping("/logout")
     public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.getSession().removeAttribute("username");
         String client = request.getHeader("User-Agent").split("\\)")[0] + ")";
         map.remove(client);
-        return ResponseEntity.ok().body("退出登录成功");
+        return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList("退出登录成功")));
     }
 
 
@@ -91,7 +91,7 @@ public class UserController {
             return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList(username)));
         } else {
             String client = request.getHeader("User-Agent").split("\\)")[0] + ")";
-            return ResponseEntity.ok().body(map.get(client));
+            return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList(map.get(client))));
         }
     }
 }

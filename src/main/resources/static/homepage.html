@@ -18,7 +18,7 @@
 			<div class="user-div">
 				<span class="iconfont user-icon-span" v-on:mouseover.once="getLoginedUsername()">&#xe6db;</span>
 				<div class="user-info-div">
-					<span class="iconfont user-info">&#xe6db; username: {{username[0]}}</span>
+					<span class="iconfont user-info">&#xe6db; username: {{username}}</span>
 					<form class="loginout-form"  method="get">
 						<input type="button" class="loginout-btn" value = "登出" @click="logout"/>
 					</form>
@@ -95,7 +95,7 @@
 		methods:{
 			getLoginedUsername(){
 				this.$http.get('/username').then(function (res){
-				    this.username = res.data;
+				    this.username = res.data[0];
 				})
 			},
 			loadPicture(name){

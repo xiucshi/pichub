@@ -81,7 +81,6 @@ public class FileController {
                         fileService.upload(video);
                     }
                 }
-
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -134,7 +133,7 @@ public class FileController {
     public ResponseEntity<Object> filenames(@RequestParam("category") String category){
         List<String> filenames = fileService.getFilenamesByCategory(category);
         if (filenames == null || filenames.size() == 0){
-            return ResponseEntity.ok().body("该目录不存在文件：" + category);
+            return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList("该目录不存在文件：" + category)));
         }
       //  List<String> pictures = filenames.stream().filter(filename -> !filename.endsWith(".mp4")).collect(Collectors.toList());
         return ResponseEntity.ok().body(filenames);
@@ -150,7 +149,7 @@ public class FileController {
      //   user = User.builder().category("Taylor Swift,xiaoqiai").build();
         List<String> category = Stream.of(user.getCategory().split(",")).collect(Collectors.toList());
         if (category == null || category.size() == 0){
-            return ResponseEntity.ok().body("找不到目录");
+            return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList("找不到目录")));
         }
         return ResponseEntity.ok().body(category);
     }
