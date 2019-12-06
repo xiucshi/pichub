@@ -75,8 +75,7 @@ public class FileController {
                     }
                 } else {
                     if (FileUtils.save(VIDEO_SAVE_PATH, file)) {
-                        InputStream videoCover = new FileInputStream(new java.io.File(VIDEO_SAVE_PATH,"video_cover.jpg"));
-                        File video = File.builder().content(videoCover).createTime(new Timestamp(new Date().getTime())).fileFormat(fileFormat).
+                        File video = File.builder().content(null).createTime(new Timestamp(new Date().getTime())).fileFormat(fileFormat).
                                 filename(file.getOriginalFilename()).category("video").build();
                         fileService.upload(video);
                     }

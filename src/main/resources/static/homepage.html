@@ -85,7 +85,6 @@
             filenames: [],
             category_list:[],
 			play:false,
-			host: 'http://10.21.71.111:8080',
 			raw_image_url:'',
 			show_upload_page:false,
 			username:'',
@@ -99,7 +98,7 @@
 				})
 			},
 			loadPicture(name){
-				this.raw_image_url = this.host + '/picture/' + name;
+				this.raw_image_url = '/picture/' + name;
 			},
             stopVideo(){
                 this.play = false;
@@ -111,7 +110,7 @@
                 this.play = true;
                 let player = document.getElementById("player");
                 player.volume = 0.05;
-                player.src = this.host + '/videos/' + name;
+                player.src = '/videos/' + name;
                 player.play();
 			},
 			bindFiles(event){

@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @Author : xiuc_shi
  **/
 @Configuration
-public class ResourceHanlderConfig  implements WebMvcConfigurer{
+public class ResourceHandlerConfig implements WebMvcConfigurer{
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/videos/**","/picture/**")
