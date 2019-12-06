@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +37,10 @@ public class FileController {
 
     @Autowired
     private FileService fileService;
-    private final String VIDEO_SAVE_PATH = "src\\main\\resources\\static\\videos";
-    private final String PICTURE_SAVE_PATH = "src\\main\\resources\\static\\images";
+    @Value("${videos.location}")
+    private String VIDEO_SAVE_PATH;
+    @Value("${images.location}")
+    private String PICTURE_SAVE_PATH;
     @Autowired
     @Qualifier("mailContainer")
     private List<String> mailContainer;

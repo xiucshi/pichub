@@ -27,13 +27,13 @@
 			<h1>Pichub</h1>
 		</div>
 		<div class="left-div">
-			<form >
+			<form>
 				<input type="button" id="up" class="btn upload-btn iconfont" value="上传文件 &#xe69b;" @click="show_upload_page = !show_upload_page"/>
 			</form>
 
-			<form  class="upload-form" v-show="show_upload_page" method="post"  enctype="multipart/form-data">
+			<form  class="upload-form" id="form1"  v-show="show_upload_page" method="post"  enctype="multipart/form-data">
 				<div>
-					<input class="select-file" type="file" name="files" @change="bindFiles($event)" multiple/>
+					<input class="select-file" type="file" name="files" @change="bindFiles($event)" accept="image/gif,image/jpeg,image/png,video/mp4" multiple/>
 				</div>
 				<div>
 					<input class="category-txt" type="text" name="category" v-model="upload_category"  placeholder="请输入类别" />
@@ -60,12 +60,11 @@
 		<div class="right-div">
 			<div id="files" >
 				<a class="link" v-for="f in filenames" v-if="!f.endsWith('.mp4')" @click="loadPicture(f)">
-					<img :src="host + '/picture?filename=' + f" height="80px"/>
+					<img :src="'/picture?filename=' + f" height="80px"/>
 				</a>
 				<a class="link" v-for="f in filenames" v-if="f.endsWith('.mp4')" @click="loadVideo(f)" :title="f">
 					<span class="iconfont video-span" >&#xeb97;</span>
 				</a>
-
 			</div>
 
 		</div>
@@ -117,13 +116,13 @@
 				let files = event.target.files;
 				console.log(files)
 				for(let i = 0; i < files.length;i++){
-					this.upload_files.push(files[i]);
+					//仅支持上传四种格式文件
+					if (files[i].name.endsWith('.jpg') || files[i].name.endsWith('.jpeg') ||
+							files[i].name.endsWith('.png') || files[i].name.endsWith('.gif') ||
+							files[i].name.endsWith('.mp4')){
+						this.upload_files.push(files[i]);
+					}
 				}
-				let list = [];
-				for(let file in files){
-					list.push(file);
-				}
-				console.log(list);
 			},
             upload(){
 				let formData = new FormData();
@@ -141,6 +140,10 @@
 								'Content-Type': 'multipart/form-data'
 							}
 						}).then(function (){
+							let form1 = document.getElementById('form1');
+							form1.reset();
+							this.upload_files = [];
+							this.upload_category = '';
 							alert("文件上传成功");
 						} , function () {
 							alert("文件上传失败");
