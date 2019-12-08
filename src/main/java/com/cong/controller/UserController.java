@@ -46,9 +46,9 @@ public class UserController {
         Optional<String> loginInfo = authService.login(username, password);
         if(loginInfo.get().equals("登录成功")){
             request.getSession().setAttribute("username", username);
-
+            String ip = request.getRemoteAddr();
             String client = request.getHeader("User-Agent").split("\\)")[0] + ")";
-            map.put(client,username);
+            map.put(ip,username);
             log.info(request.getRemoteAddr() + "  " + client + "登录：username->" + username);
             mailContainer.add(request.getSession().getAttribute("username") + " is logined.");
             mailContainer.add("IP地址：" + request.getRemoteAddr());
@@ -61,18 +61,18 @@ public class UserController {
     @GetMapping("/logout")
     public ResponseEntity<Object> logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.getSession().removeAttribute("username");
-        String client = request.getHeader("User-Agent").split("\\)")[0] + ")";
-        map.remove(client);
+        String ip = request.getRemoteAddr();
+        map.remove(ip);
         return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList("退出登录成功")));
     }
 
 
-    /**
-     * 充当路由
-     * @param request
-     * @param response
-     * @throws IOException
-     */
+//    /**
+//     * 充当路由
+//     * @param request
+//     * @param response
+//     * @throws IOException
+//     */
 //    @GetMapping("/")
 //    public void welcome(HttpServletRequest request, HttpServletResponse response) throws IOException {
 //        HttpSession session = request.getSession();
@@ -90,8 +90,8 @@ public class UserController {
         if (username != null){
             return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList(username)));
         } else {
-            String client = request.getHeader("User-Agent").split("\\)")[0] + ")";
-            return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList(map.get(client))));
+            String ip = request.getRemoteAddr();
+            return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList(map.get(ip))));
         }
     }
 }

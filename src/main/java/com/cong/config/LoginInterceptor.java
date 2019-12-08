@@ -21,14 +21,13 @@ public class LoginInterceptor implements HandlerInterceptor {
     private Map<String,String> map;
     public LoginInterceptor(Map<String, String> map){
         this.map = map;
-
     }
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
         Object userInfo = session.getAttribute("username");
-        String client = request.getHeader("User-Agent").split("\\)")[0] + ")";
-        if (userInfo == null && map.get(client) == null){
+        String ip = request.getRemoteAddr();
+        if (userInfo == null && map.get(ip) == null){
             log.info("未登录");
             return false;
         } else {
