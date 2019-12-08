@@ -16,7 +16,7 @@
 	<div class="container" id="app">
 		<div>
 			<div class="user-div">
-				<span class="iconfont user-icon-span" v-on:mouseover.once="getLoginedUsername()">&#xe6db;</span>
+				<span class="iconfont user-icon-span" >&#xe6db;</span>
 				<div class="user-info-div">
 					<span class="iconfont user-info">&#xe6db; username: {{username}}</span>
 					<form class="loginout-form"  method="get">
@@ -77,7 +77,7 @@
 	</div>
 
 <script>
-    new Vue({
+    let vm = new Vue({
         el: '#app',
         data:{
             category: '',
@@ -90,12 +90,18 @@
 			upload_files:[],
 			upload_category:''
 		},
+		mounted(){
+			this.$http.get('/username').then(function (res){
+				this.username = res.data[0];
+			})
+		},
 		methods:{
-			getLoginedUsername(){
-				this.$http.get('/username').then(function (res){
-				    this.username = res.data[0];
-				})
-			},
+			// getLoginedUsername(){
+			// 	this.$http.get('/username').then(function (res){
+			// 	    this.username = res.data[0];
+			// 	    console.log(this.username);
+			// 	})
+			// },
 			loadPicture(name){
 				this.raw_image_url = '/picture/' + name;
 			},
