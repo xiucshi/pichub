@@ -1,14 +1,12 @@
 package com.cong.controller;
 
 import com.cong.bean.MailSender;
-import com.cong.service.AuthService;
+import com.cong.bean.User;
+import com.cong.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +23,7 @@ import java.util.concurrent.ExecutorService;
 @Slf4j
 public class UserController {
     @Autowired
-    private AuthService authService;
+    private UserService userService;
     @Autowired
     private List<String> mailContainer;
     @Autowired
@@ -43,7 +41,8 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Object> login(HttpServletRequest request, HttpServletResponse response,
                                         @RequestParam("username") String username, @RequestParam("password") String password) throws IOException {
-        Optional<String> loginInfo = authService.login(username, password);
+        System.out.println("username:" + username + " " + "password:" + password);
+        Optional<String> loginInfo = userService.login(username, password);
         if(loginInfo.get().equals("登录成功")){
             request.getSession().setAttribute("username", username);
             String ip = request.getRemoteAddr();
@@ -92,6 +91,29 @@ public class UserController {
         } else {
             String ip = request.getRemoteAddr();
             return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList(map.get(ip))));
+        }
+    }
+
+    /**
+     * 主要用于获取登录界面的头像
+     * @param username
+     * @return
+     */
+    @GetMapping("/user/{username}")
+    public ResponseEntity<Object> getUser(@PathVariable("username") String username){
+        User user = userService.getUser(username);
+        return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList(user)));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Object> getLoginedUser(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String username = (String) session.getAttribute("username");
+        if (username != null){
+            return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList(userService.getUser(username))));
+        } else {
+            String ip = request.getRemoteAddr();
+            return ResponseEntity.ok().body(new ArrayList<>(Arrays.asList(userService.getUser(map.get(ip)))));
         }
     }
 }
