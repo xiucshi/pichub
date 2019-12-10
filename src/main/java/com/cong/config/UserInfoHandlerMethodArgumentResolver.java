@@ -2,19 +2,13 @@ package com.cong.config;
 
 import com.cong.annotation.UserInfo;
 import com.cong.bean.User;
-import com.cong.mapper.AuthMapper;
-import com.cong.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import com.cong.service.UserService;
 import org.springframework.core.MethodParameter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import javax.annotation.Resource;
-import javax.annotation.Resources;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -25,10 +19,10 @@ import java.util.Map;
 
 public class UserInfoHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private AuthService authService;
+    private UserService userService;
     private Map<String, String> sessionMap;
-    public UserInfoHandlerMethodArgumentResolver(AuthService authService, Map<String, String> sessionMap){
-        this.authService = authService;
+    public UserInfoHandlerMethodArgumentResolver(UserService userService, Map<String, String> sessionMap){
+        this.userService = userService;
         this.sessionMap = sessionMap;
     }
     @Override
@@ -45,10 +39,10 @@ public class UserInfoHandlerMethodArgumentResolver implements HandlerMethodArgum
         String username = (String) request.getSession().getAttribute("username");
         User user = null;
         if(username != null){
-            user = authService.getUser(username);
+            user = userService.getUser(username);
         } else {
             String client = request.getHeader("User-Agent").split("\\)")[0] + ")";
-            user = authService.getUser(sessionMap.get(client));
+            user = userService.getUser(sessionMap.get(client));
         }
         return user;
     }
