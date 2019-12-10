@@ -1,6 +1,6 @@
 package com.cong.config;
 
-import com.cong.service.AuthService;
+import com.cong.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class ArgumentResolverConfig implements WebMvcConfigurer {
     @Lazy
     @Autowired
-    private AuthService authService;
+    private UserService userService;
 
     @Lazy
     @Autowired
@@ -26,6 +26,6 @@ public class ArgumentResolverConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new UserInfoHandlerMethodArgumentResolver(authService, sessionMap));
+        resolvers.add(new UserInfoHandlerMethodArgumentResolver(userService, sessionMap));
     }
 }
