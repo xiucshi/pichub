@@ -17,8 +17,8 @@ public class ResourceHandlerConfig implements WebMvcConfigurer{
     private String PICTURE_SAVE_PATH;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/videos/**","/picture/**")
-                .addResourceLocations("file:" + VIDEO_SAVE_PATH + "/","file:" + PICTURE_SAVE_PATH + "/");
+        registry.addResourceHandler("/videos/**","/picture/**","/head_img/**")
+                .addResourceLocations("file:" + VIDEO_SAVE_PATH + "/","file:" + PICTURE_SAVE_PATH + "/","file:" + PICTURE_SAVE_PATH + "/head_img/");
 
     }
 }
